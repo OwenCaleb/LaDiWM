@@ -8,7 +8,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 # input parameters
 parser = argparse.ArgumentParser()
-parser.add_argument("--suite", default="libero_base", choices=["libero_spatial", "libero_object", "libero_goal", "libero_90", "libero_100", "libero_base"],
+parser.add_argument("--suite", default="libero_90", choices=["libero_spatial", "libero_object", "libero_goal", "libero_90", "libero_100", "libero_base"],
                     help="The name of the desired suite, where libero_10 is the alias of libero_long.")
 args = parser.parse_args()
 
@@ -21,14 +21,14 @@ root_dir = "/media/huang/T7/data/atm_libero/"
 suite_name = args.suite
 
 # setup number of epoches and dataset path
-if suite_name == "libero_100":
-    EPOCH = 301
-    train_dataset_list = glob(os.path.join(root_dir, "libero_90/*/train/")) + glob(os.path.join(root_dir, "libero_10/*/train/"))
-    val1_dataset_list = glob(os.path.join(root_dir, "libero_90/*/val/")) + glob(os.path.join(root_dir, "libero_10/*/val/"))
-else:
-    EPOCH = 101
-    train_dataset_list = glob(os.path.join(root_dir, f"{suite_name}/*/train/"))
-    val1_dataset_list = glob(os.path.join(root_dir, f"{suite_name}/*/val/"))
+# if suite_name == "libero_100":
+#     EPOCH = 301
+#     train_dataset_list = glob(os.path.join(root_dir, "libero_90/*/train/")) + glob(os.path.join(root_dir, "libero_10/*/train/"))
+#     val1_dataset_list = glob(os.path.join(root_dir, "libero_90/*/val/")) + glob(os.path.join(root_dir, "libero_10/*/val/"))
+# else:
+#     EPOCH = 101
+train_dataset_list = glob(os.path.join(root_dir, f"{suite_name}/*/train/"))
+val1_dataset_list = glob(os.path.join(root_dir, f"{suite_name}/*/val/"))
 
 command = (f'python -m engine.train_diffusion_transformer_action --config-name={CONFIG_NAME} '
            f'train_gpus="{gpu_ids}" '
