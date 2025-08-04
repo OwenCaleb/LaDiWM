@@ -1,5 +1,5 @@
 # LaDiWM
-### LaDiWM: A Latent Diffusion-based World Model for Predictive Manipulation
+### LaDiWM: A Latent Diffusion-based World Model for Predictive Manipulation ([![arxiv paper](https://img.shields.io/badge/arXiv-Paper-red)](https://arxiv.org/abs/2505.11528))
 
 ### Installation
 ```bash
