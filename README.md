@@ -3,6 +3,8 @@
 
 ### Installation
 ```bash
+git clone https://github.com/GuHuangAI/LaDiWM.git
+cd LaDiWM
 conda env create -f environment.yml
 conda activate ladiwm
 ```
