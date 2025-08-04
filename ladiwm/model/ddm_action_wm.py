@@ -211,50 +211,50 @@ class DDM(nn.Module):
         masked_patches[mask] = self.mask_token
         return masked_patches
 
-    def _mask_track_as_first(self, track):
-        """
-        mask out all frames to have the same token as the first frame
-        """
-        mask_track = track.clone() # b, t, n, d
-        mask_track[:, 1:] = track[:, [0]]
-        return mask_track
+    # def _mask_track_as_first(self, track):
+    #     """
+    #     mask out all frames to have the same token as the first frame
+    #     """
+    #     mask_track = track.clone() # b, t, n, d
+    #     mask_track[:, 1:] = track[:, [0]]
+    #     return mask_track
 
-    def forward(self, vid, track, task_emb, p_img):
-        """
-        track: (b, tl, n, 2), which means current time step t0 -> t0 + tl
-        vid: (b, t, c, h, w), which means the past time step t0 - t -> t0
-        task_emb, (b, emb_size)
-        """
-        assert torch.max(vid) <=1.
-        B, T, _, _ = track.shape
-        patches = self._encode_video(vid, p_img)  # (b, n_image, d)
-        enc_track = self._encode_track(track)
-
-        text_encoded = self.language_encoder(task_emb)  # (b, c)
-        text_encoded = rearrange(text_encoded, 'b c -> b 1 c')
-
-        x = torch.cat([enc_track, patches, text_encoded], dim=1)
-        x = self.transformer(x)
-
-        rec_track, rec_patches = x[:, :self.num_track_patches], x[:, self.num_track_patches:-1]
-        rec_patches = self.img_decoder(rec_patches)  # (b, n_image, 3 * t * patch_size ** 2)
-        rec_track = self.track_decoder(rec_track)  # (b, (t n), 2 * patch_size)
-        num_track_h = self.num_track_ts // self.track_patch_size
-        rec_track = rearrange(rec_track, 'b (t n) (p c) -> b (t p) n c', p=self.track_patch_size, t=num_track_h)
-
-        return rec_track, rec_patches
-
-    def reconstruct(self, vid, track, task_emb, p_img):
-        """
-        wrapper of forward with preprocessing
-        track: (b, tl, n, 2), which means current time step t0 -> t0 + tl
-        vid: (b, t, c, h, w), which means the past time step t0 - t -> t0
-        task_emb: (b, e)
-        """
-        assert len(vid.shape) == 5  # b, t, c, h, w
-        track = self._preprocess_track(track)
-        vid = self._preprocess_vid(vid)
-        return self.forward(vid, track, task_emb, p_img)
+    # def forward(self, vid, track, task_emb, p_img):
+    #     """
+    #     track: (b, tl, n, 2), which means current time step t0 -> t0 + tl
+    #     vid: (b, t, c, h, w), which means the past time step t0 - t -> t0
+    #     task_emb, (b, emb_size)
+    #     """
+    #     assert torch.max(vid) <=1.
+    #     B, T, _, _ = track.shape
+    #     patches = self._encode_video(vid, p_img)  # (b, n_image, d)
+    #     enc_track = self._encode_track(track)
+    #
+    #     text_encoded = self.language_encoder(task_emb)  # (b, c)
+    #     text_encoded = rearrange(text_encoded, 'b c -> b 1 c')
+    #
+    #     x = torch.cat([enc_track, patches, text_encoded], dim=1)
+    #     x = self.transformer(x)
+    #
+    #     rec_track, rec_patches = x[:, :self.num_track_patches], x[:, self.num_track_patches:-1]
+    #     rec_patches = self.img_decoder(rec_patches)  # (b, n_image, 3 * t * patch_size ** 2)
+    #     rec_track = self.track_decoder(rec_track)  # (b, (t n), 2 * patch_size)
+    #     num_track_h = self.num_track_ts // self.track_patch_size
+    #     rec_track = rearrange(rec_track, 'b (t n) (p c) -> b (t p) n c', p=self.track_patch_size, t=num_track_h)
+    #
+    #     return rec_track, rec_patches
+    #
+    # def reconstruct(self, vid, track, task_emb, p_img):
+    #     """
+    #     wrapper of forward with preprocessing
+    #     track: (b, tl, n, 2), which means current time step t0 -> t0 + tl
+    #     vid: (b, t, c, h, w), which means the past time step t0 - t -> t0
+    #     task_emb: (b, e)
+    #     """
+    #     assert len(vid.shape) == 5  # b, t, c, h, w
+    #     track = self._preprocess_track(track)
+    #     vid = self._preprocess_vid(vid)
+    #     return self.forward(vid, track, task_emb, p_img)
 
     def normalize(self, x):  # [0, 255] --> [-1, 1]
         x = x / 255.
@@ -345,7 +345,7 @@ class DDM(nn.Module):
         x_noisy_sig = self.q_sample(x_start=res_sig, noise=noise_sig, t=t, C=C_sig)
         # C_pred, noise_pred = self.forward(vid, track, task_emb, p_img)
         cond = [lc_his_dino, lc_his_sig, task_emb, action]
-        C_pred_dino, noise_pred_dino, C_pred_sig, noise_pred_sig, C_pred_dino_tmp, C_pred_sig_tmp = \
+        C_pred_dino, C_pred_sig, C_pred_dino_tmp, C_pred_sig_tmp = \
                                 self.transformer(x_noisy_dino, x_noisy_sig, cond, t)
         # vis[vis == 0] = .1
         # vis = repeat(vis, "b tl n -> b tl n c", c=2)
@@ -358,20 +358,20 @@ class DDM(nn.Module):
         C_loss = simple_weight1 * ((C_pred_dino - C_dino) ** 2).mean([1, 2, 3]) + \
                  simple_weight1 * ((C_pred_sig - C_sig) ** 2).mean([1, 2, 3])
 
-        noise_loss = simple_weight2 * ((noise_pred_dino - noise_dino) ** 2).mean([1, 2, 3]) + \
-                     simple_weight2 * ((noise_pred_sig - noise_sig) ** 2).mean([1, 2, 3])
+        # noise_loss = simple_weight2 * ((noise_pred_dino - noise_dino) ** 2).mean([1, 2, 3]) + \
+        #              simple_weight2 * ((noise_pred_sig - noise_sig) ** 2).mean([1, 2, 3])
         # track_loss = simple_weight1 * ((C_pred_dino - C_dino) ** 2).mean([1, 2, 3]) + \
         #              simple_weight2 * ((noise_pred_dino - noise_dino) ** 2).mean([1, 2, 3]) + \
         #              simple_weight1 * ((C_pred_sig - C_sig) ** 2).mean([1, 2, 3]) + \
         #              simple_weight2 * ((noise_pred_sig - noise_sig) ** 2).mean([1, 2, 3])
-        track_loss = C_loss + noise_loss
+        track_loss = C_loss #+ noise_loss
         track_loss = track_loss.mean()
-        aux_loss = rec_weight* ((C_pred_dino_tmp - C_dino) ** 2).mean([1, 2, 3]) \
-                     + rec_weight * ((C_pred_sig_tmp - C_sig) ** 2).mean([1, 2, 3])
+        aux_loss = simple_weight1 * ((C_pred_dino_tmp - C_dino) ** 2).mean([1, 2, 3]) \
+                     + simple_weight2 * ((C_pred_sig_tmp - C_sig) ** 2).mean([1, 2, 3])
         aux_loss = aux_loss.mean()
         # if kwargs.pop('epoch') > 50:
         #     img_loss = torch.zeros_like(track_loss)
-        variation_loss = (C_pred_sig.abs().mean([1, 2, 3]) + C_pred_dino.abs().mean([1, 2, 3])) * 0.001
+        variation_loss = (C_pred_sig.abs().mean([1, 2, 3]) + C_pred_dino.abs().mean([1, 2, 3])) * 0.0003
         variation_loss = rec_weight * variation_loss
         variation_loss = variation_loss.mean()
         loss = track_loss + variation_loss + aux_loss
@@ -382,7 +382,7 @@ class DDM(nn.Module):
             "aux_loss": aux_loss.item(),
             "variation_loss": variation_loss.item(),
             'C_loss': C_loss.mean().item(),
-            'noise_loss': noise_loss.mean().item(),
+            # 'noise_loss': noise_loss.mean().item(),
         }
         # if self.pred_flow:
         #     x_rec = x_prior - C_pred * math.sqrt(2)
@@ -612,7 +612,7 @@ class DDM(nn.Module):
         # N, C = z2.shape[-2:]
         z1_prior = z1_prior.unsqueeze(1).repeat(1, self.transformer.tube_size, 1, 1)  # B, T, N, C
         z2_prior = z2_prior.unsqueeze(1).repeat(1, self.transformer.tube_size, 1, 1)  # B, T, N, C
-        sample_fn = self.sample_fn2
+        sample_fn = self.sample_fn
         # z1, z2 = sample_fn((batch_size, self.transformer.tube_size, self.seq_len, channels),
         #               up_scale=up_scale, unnormalize=False, cond=cond, denoise=denoise, mask=mask,
         #               use_action=use_action)
@@ -658,27 +658,20 @@ class DDM(nn.Module):
             else:
                 pred = self.transformer(x_cur_dino, x_cur_sig, t_cur.repeat(batch), mask, use_action=use_action,
                                         is_training=False)
-            C_dino, noise_dino, C_sig, nosie_sig = pred[:4]
-            C_dino, noise_dino, C_sig, nosie_sig = C_dino.to(torch.float64), noise_dino.to(torch.float64), C_sig.to(torch.float64), nosie_sig.to(torch.float64)
+            C_dino, C_sig = pred[:2]
+            C_dino, C_sig = C_dino.to(torch.float64), C_sig.to(torch.float64)
             # x0 = x_cur - C * t_cur - noise * t_cur
+            noise_dino = (x_cur_dino - (t_cur - 1) * C_dino) / t_cur
+            noise_sig = (x_cur_sig - (t_cur - 1) * C_sig) / t_cur
+
             x0_dino = x_cur_dino - C_dino * t_cur - noise_dino * t_cur
-            x0_sig = x_cur_sig - C_sig * t_cur - nosie_sig * t_cur
+            x0_sig = x_cur_sig - C_sig * t_cur - noise_sig * t_cur
             # d_cur = (x_cur - x0) / t_cur
             # x_next = x_cur + (t_next - t_cur) * d_cur
             x_next_dino = x0_dino + t_next * C_dino + t_next * noise_dino
-            x_next_sig = x0_sig + t_next * C_sig + t_next * nosie_sig
+            x_next_sig = x0_sig + t_next * C_sig + t_next * noise_sig
             # d_cur = C + noise
             # x_next = x_cur + (t_next - t_cur) * d_cur
-            # Apply 2-order correction.
-            # if i < sampling_timesteps - 1:
-            #     if cond is not None:
-            #         pred = self.model(x_next, t_next, cond)
-            #     else:
-            #         pred = self.model(x_next, t_next)
-            #     C_, noise_ = pred[:2]
-            #     C_, noise_ = C_.to(torch.float64), noise_.to(torch.float64)
-            #     d_next = C_ + noise_
-            #     x_next = x_cur + (t_next - t_cur) * 0.5 * (d_cur + d_next)
         x_dino, x_sig = x_next_dino.to(torch.float32), x_next_sig.to(torch.float32)
         return x_dino, x_sig
 

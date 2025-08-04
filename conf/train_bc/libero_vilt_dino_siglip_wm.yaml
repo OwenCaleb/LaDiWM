@@ -1,7 +1,7 @@
 defaults:
   - _self_
 
-experiment: dino_siglip_wm5_frame4_ee # tag for wandb and log dir
+experiment: dino_siglip_wm_policy # tag for wandb and log dir
 
 hydra:
   run:

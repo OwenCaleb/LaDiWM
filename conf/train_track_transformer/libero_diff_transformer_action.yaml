@@ -1,7 +1,7 @@
 defaults:
   - _self_
 
-experiment: ddm_dino10_simultaneous_diffusion # tag for wandb and log dir
+experiment: ddm_interactive_diffusion_world_model # tag for wandb and log dir
 
 hydra:
   run:
@@ -91,7 +91,7 @@ vae_cfg:
   ckpt_path:
 
 trans_cfg:
-  class_name: ladiwm.model.dit_action_dino5.DiffusionTransformer
+  class_name: ladiwm.model.dit_action.DiffusionTransformer
   in_channel: 768
   img_size: 81
   down_ratio: 8
@@ -105,8 +105,8 @@ trans_cfg:
 #  pretrained_swin: '/media/huang/2da18d46-7cba-4259-9abd-0df819bb104c/pre_weight/swin_base_patch244_window877_kinetics400_22k.pth'
 
 model_cfg:
-  class_name: ladiwm.model.ddm_action_dino10.DDM
-  load_path: /media/huang/T7/real_exp/diff_worldmodel/0206_ddm_dino10_simultaneous_diffusion_2347/model_best.ckpt
+  class_name: ladiwm.model.ddm_action_wm.DDM
+  load_path: #/media/huang/T7/real_exp/diff_worldmodel/0206_ddm_dino10_simultaneous_diffusion_2347/model_best.ckpt
   seq_len: 162
   channels: 768
   transformer_cfg:

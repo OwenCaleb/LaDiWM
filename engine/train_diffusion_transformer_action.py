@@ -180,7 +180,7 @@ def run_one_epoch(fabric,
             lbd_img=lbd_img,
             p_img=p_img,
             epoch=epoch)  # do not use vis
-        if d_id % 5 == 0:
+        if d_id % 100 == 0:
             print(ret_dict)
         optimizer.zero_grad()
         fabric.backward(loss)

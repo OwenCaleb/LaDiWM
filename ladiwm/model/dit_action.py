@@ -917,23 +917,24 @@ class DiffusionTransformer(nn.Module):
 
         y_tmp1 = self.component1(x1, v_fea, time_fea, cond_fea, shape=shape)
         y_tmp2 = self.component2(x2, v_fea2, time_fea, cond_fea, shape=shape)
-        y = self.final_layer(x1, y_tmp2.flatten(1, 2), time_fea, cond_fea,
+        y = y_tmp1 + self.final_layer(x1, y_tmp2.flatten(1, 2), time_fea, cond_fea,
                              shape=shape)  # (N, T, patch_size ** 2 * out_channels)
         # y = self.unpatchify(y)  # (N, 4, T, H, W)
-        y2 = self.final_layer2(x1, y_tmp2.flatten(1, 2), time_fea, cond_fea,
-                               shape=shape)  # (N, T, patch_size ** 2 * out_channels)
+        # y2 = self.final_layer2(x1, y_tmp2.flatten(1, 2), time_fea, cond_fea,
+        #                        shape=shape)  # (N, T, patch_size ** 2 * out_channels)
         # y2 = self.unpatchify(y2)  # (N, T*4, H, W)
-        y3 = self.final_layer3(x2, y_tmp1.flatten(1, 2), time_fea, cond_fea,
+        y3 = y_tmp2 + self.final_layer3(x2, y_tmp1.flatten(1, 2), time_fea, cond_fea,
                              shape=shape)  # (N, T, patch_size ** 2 * out_channels)
-        y4 = self.final_layer4(x2, y_tmp1.flatten(1, 2), time_fea, cond_fea,
-                             shape=shape)  # (N, T, patch_size ** 2 * out_channels)
+        # y4 = self.final_layer4(x2, y_tmp1.flatten(1, 2), time_fea, cond_fea,
+        #                      shape=shape)  # (N, T, patch_size ** 2 * out_channels)
 
         if precond:
             y = c_skip1 * x_clone1 + c_out1 * y
-            y2 = c_skip2 * x_clone1 + c_out2 * y2
+            # y2 = c_skip2 * x_clone1 + c_out2 * y2
             y3 = c_skip1 * x_clone2 + c_out1 * y3
-            y4 = c_skip2 * x_clone2 + c_out2 * y4
-        return y, y2, y3, y4, y_tmp1, y_tmp2
+            # y4 = c_skip2 * x_clone2 + c_out2 * y4
+        # return y, y2, y3, y4, y_tmp1, y_tmp2
+        return y, y3, y_tmp1, y_tmp2
 
 if __name__ == '__main__':
     x = torch.rand(1, 4, 256, 4)

@@ -2,11 +2,23 @@
 ### LaDiWM: A Latent Diffusion-based World Model for Predictive Manipulation
 
 ### Installation
-
+```bash
+conda env create -f environment.yml
+conda activate ladiwm
+```
 
 ### Data Preparation
-
+1. Download [LIBERO](https://libero-project.github.io/datasets) dataset, note that we train the world model with LIBERO-90, and policy model with LIBERO-LONG (LIBERO-10).
+2. Process the dataset following [ATM](https://github.com/Large-Trajectory-Model/ATM#dataset-preprocessing).
+3. Download DINO pretrained weight from [here](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitb14/dinov2_vitb14_pretrain.pth), and search for 'dinov2_vitb14_pretrain.pth' in the [wm config file](./conf/train_track_transformer/libero_diff_transformer_action.yaml) and [policy config file](./conf/train_bc/libero_vilt_dino_siglip_wm.yaml), and replace the original path by your local path.
 
 ### Training
-
+1. To train the world model, you need to modify line-20 of the [training script](./scripts/train_libero_diffusion_transformer_action_base.py) to your local data path.
+```bash
+PYTHONPATH=$(pwd) python ./scripts/train_libero_diffusion_transformer_action_base.py 
+```
+2. To train the policy model, you need to modify line-72 of the [training script](./scripts/train_libero_policy_diff_action.py) to your local data path.
+```bash
+PYTHONPATH=$(pwd) python ./scripts/train_libero_policy_diff_action.py -tt $Your local path for saving world model
+```
 ### Evaluation

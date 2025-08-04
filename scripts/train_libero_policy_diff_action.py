@@ -15,24 +15,24 @@ DEFAULT_TRACK_TRANSFORMERS = {
 
 # input parameters
 parser = argparse.ArgumentParser()
-parser.add_argument("--suite", default="libero_complex", choices=['libero_base', "libero_complex", "libero_spatial", "libero_object", "libero_goal", "libero_10"],
+parser.add_argument("--suite", default="libero_10", choices=['libero_base', "libero_complex", "libero_spatial", "libero_object", "libero_goal", "libero_10"],
                     help="The name of the desired suite, where libero_10 is the alias of libero_long.")
 parser.add_argument("-tt", "--track-transformer", default=None, help="Then path to the trained track transformer.")
-parser.add_argument("--config", default='libero_vilt_dino_siglip_wm4_frame1_ee', help="Then config name of yaml.")
+parser.add_argument("--config", default='libero_vilt_dino_siglip_wm', help="Then config name of yaml.")
 args = parser.parse_args()
 
 # training configs
 CONFIG_NAME = args.config
 
 train_gpu_ids = [0, ]
-NUM_DEMOS = 20
+NUM_DEMOS = 10
 
 root_dir = "./data/atm_libero/"
 
 suite_name = args.suite
 task_dir_list = os.listdir(os.path.join(root_dir, suite_name))
 task_dir_list.sort()
-exp_name = 'libero_vilt_dino_siglip_wm4_frame1_ee'
+exp_name = 'libero_vilt_dino_siglip_wm_policy'
 # dataset
 train_path_list = [f"{root_dir}/{suite_name}/{task_dir}/bc_train_{NUM_DEMOS}" for task_dir in task_dir_list]
 val_path_list = [f"{root_dir}/{suite_name}/{task_dir}/val" for task_dir in task_dir_list]
@@ -41,7 +41,7 @@ track_fn = args.track_transformer or DEFAULT_TRACK_TRANSFORMERS[suite_name]
 
 for seed in range(1):
     commond = (f'python -m engine.train_bc_diff_action --config-name={CONFIG_NAME} train_gpus="{train_gpu_ids}" '
-                f'experiment=atm-policy_{suite_name.replace("_", "-")}_demo{NUM_DEMOS}_{exp_name} '
+                f'experiment={suite_name.replace("_", "-")}_demo{NUM_DEMOS}_{exp_name} '
                 f'train_dataset="{train_path_list}" val_dataset="{val_path_list}" '
                 f'model_cfg.track_cfg.track_fn={track_fn} '
                 f'model_cfg.track_cfg.use_zero_track=False '
