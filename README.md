@@ -16,7 +16,7 @@ conda activate ladiwm
 3. Download DINO pretrained weight from [here](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitb14/dinov2_vitb14_pretrain.pth), and search for 'dinov2_vitb14_pretrain.pth' in the [wm config file](./conf/train_track_transformer/libero_diff_transformer_action.yaml) and [policy config file](./conf/train_bc/libero_vilt_dino_siglip_wm.yaml), and replace the original path by your local path.
 
 ### Training
-1. To train the world model, you need to modify line-20 of the [training script](./scripts/train_libero_diffusion_transformer_action_base.py) to your local data path.
+1. To train the world model, you need to modify line-20 of the [training script](./scripts/train_libero_diffusion_transformer_action_base.py) to your local data path. In addition, you should modify line-8 and line-10 of the [wm config file](./conf/train_track_transformer/libero_diff_transformer_action.yaml) to change the save path.
 ```bash
 PYTHONPATH=$(pwd) python ./scripts/train_libero_diffusion_transformer_action_base.py 
 ```
