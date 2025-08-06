@@ -1,4 +1,4 @@
-# LaDiWM
+# LaDiWM--CoRL2025
 ### LaDiWM: A Latent Diffusion-based World Model for Predictive Manipulation ([![arxiv paper](https://img.shields.io/badge/arXiv-Paper-red)](https://arxiv.org/abs/2505.11528))
 ![Teaser](assets/teaser3.png)
 
@@ -20,8 +20,16 @@ conda activate ladiwm
 ```bash
 PYTHONPATH=$(pwd) python ./scripts/train_libero_diffusion_transformer_action_base.py 
 ```
-2. To train the policy model, you need to modify line-72 of the [training script](./scripts/train_libero_policy_diff_action.py) to your local data path.
+2. To train the policy model, you need to modify line-30 of the [training script](./scripts/train_libero_policy_diff_action.py) to your local data path.
 ```bash
 PYTHONPATH=$(pwd) python ./scripts/train_libero_policy_diff_action.py -tt $Your local path for saving world model
 ```
 ### Evaluation
+modify line-21 of the [testing file](./scripts/eval_libero_policy_action.py) to your local data path.
+```bash
+PYTHONPATH=$(pwd) python ./scripts/eval_libero_policy_action.py --exp-dir $Your local path for saving policy model
+```
+
+### Thanks and Contact
+Thanks to the public repos: [ADM](https://github.com/GuHuangAI/ADM-Public) and [ATM](https://github.com/Large-Trajectory-Model/ATM) for providing the base codes. 
+If you have some questions, please contact with [GuHuangAI](huangai@nudt.edu.cn).
