@@ -25,7 +25,7 @@ PYTHONPATH=$(pwd) python ./scripts/train_libero_diffusion_transformer_action_bas
 PYTHONPATH=$(pwd) python ./scripts/train_libero_policy_diff_action.py -tt $Your local path for saving world model
 ```
 ### Evaluation
-modify line-21 of the [testing file](./scripts/eval_libero_policy_action.py) to your local data path.
+modify line-21 of the [testing script](./scripts/eval_libero_policy_action.py) to your local data path.
 ```bash
 PYTHONPATH=$(pwd) python ./scripts/eval_libero_policy_action.py --exp-dir $Your local path for saving policy model
 ```
