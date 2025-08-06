@@ -33,3 +33,14 @@ PYTHONPATH=$(pwd) python ./scripts/eval_libero_policy_action.py --exp-dir $Your 
 ### Thanks and Contact
 Thanks to the public repos: [ADM](https://github.com/GuHuangAI/ADM-Public) and [ATM](https://github.com/Large-Trajectory-Model/ATM) for providing the base codes. 
 If you have some questions, please contact with [GuHuangAI](huangai@nudt.edu.cn).
+
+## Citation
+~~~
+@inproceedings{huang2023decoupled,
+  huang2025ladi,
+  title={LaDi-WM: A Latent Diffusion-based World Model for Predictive Manipulation},
+  author={Huang, Yuhang and Zhang, Jiazhao and Zou, Shilong and Liu, Xinwang and Hu, Ruizhen and Xu, Kai},
+  booktitle={CoRL},
+  year={2025}
+}
+~~~
