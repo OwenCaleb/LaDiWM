@@ -1,5 +1,5 @@
 # LaDiWM--CoRL2025
-### LaDiWM: A Latent Diffusion-based World Model for Predictive Manipulation ([![arxiv paper](https://img.shields.io/badge/arXiv-Paper-red)](https://arxiv.org/abs/2505.11528))
+### LaDiWM: A Latent Diffusion-based World Model for Predictive Manipulation ([![arxiv paper](https://img.shields.io/badge/Project-Page-green)](https://guhuangai.github.io/LaDiWM.github.io/)	[![arxiv paper](https://img.shields.io/badge/arXiv-Paper-red)](https://arxiv.org/abs/2505.11528))
 ![Teaser](assets/teaser3.png)
 
 ### Installation
