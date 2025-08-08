@@ -32,7 +32,7 @@ PYTHONPATH=$(pwd) python ./scripts/eval_libero_policy_action.py --exp-dir $Your 
 
 ### Thanks and Contact
 Thanks to the public repos: [ADM](https://github.com/GuHuangAI/ADM-Public) and [ATM](https://github.com/Large-Trajectory-Model/ATM) for providing the base codes. 
-If you have some questions, please contact with [GuHuangAI](huangai@nudt.edu.cn).
+If you have some questions, please contact with huangai@nudt.edu.cn.
 
 ## Citation
 ~~~
