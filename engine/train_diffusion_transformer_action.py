@@ -251,8 +251,8 @@ def evaluate(model, dataloader, lbd_track, lbd_img, p_img, mix_precision=False, 
         tot_items += b
 
         i += 1
-        if i >= 50:
-            break
+        # if i >= 50:
+        #     break
 
     out_dict = {
         f"{tag}/track_loss": track_loss / tot_items,
