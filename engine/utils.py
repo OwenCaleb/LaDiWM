@@ -6,12 +6,12 @@ from tqdm import tqdm
 import wandb
 from PIL import Image
 from einops import rearrange
-from atm.utils.flow_utils import combine_track_and_img, draw_traj_on_images
-from atm.utils.video_utils import video_pad_time
+from ladiwm.utils.flow_utils import combine_track_and_img, draw_traj_on_images
+from ladiwm.utils.video_utils import video_pad_time
 import torchvision as tv
-from atm.utils.transform_utils import quat2axisangle
+from ladiwm.utils.transform_utils import quat2axisangle
 
-from get_image_mask import load_model, get_masks
+# from get_image_mask import load_model, get_masks
 
 obs_key_mapping = {
     "gripper_states": "robot0_gripper_qpos",

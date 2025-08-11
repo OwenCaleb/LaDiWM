@@ -3,7 +3,7 @@ import torch
 import torch.distributions as D
 import torch.nn as nn
 import torch.nn.functional as F
-from ladiwm.ppo.a2c_ppo_acktr.distributions import DiagGaussian
+# from ladiwm.ppo.a2c_ppo_acktr.distributions import DiagGaussian
 
 
 class DeterministicHead(nn.Module):

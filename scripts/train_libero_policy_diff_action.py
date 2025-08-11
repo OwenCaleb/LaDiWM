@@ -27,7 +27,7 @@ CONFIG_NAME = args.config
 train_gpu_ids = [0, ]
 NUM_DEMOS = 10
 
-root_dir = "./data/atm_libero/"
+root_dir = "/home/huang/code/ATM/data/atm_libero/"
 
 suite_name = args.suite
 task_dir_list = os.listdir(os.path.join(root_dir, suite_name))

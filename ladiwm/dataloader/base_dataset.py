@@ -9,7 +9,7 @@ from glob import glob
 from natsort import natsorted
 import h5py
 
-from atm.dataloader.utils import load_rgb, ImgTrackColorJitter, ImgViewDiffTranslationAug
+from ladiwm.dataloader.utils import load_rgb, ImgTrackColorJitter, ImgViewDiffTranslationAug
 
 
 class BaseDataset(Dataset):

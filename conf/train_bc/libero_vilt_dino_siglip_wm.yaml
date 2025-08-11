@@ -5,9 +5,9 @@ experiment: dino_siglip_wm_policy # tag for wandb and log dir
 
 hydra:
   run:
-    dir: ./results/policy/${now:%m%d}_${experiment}_${now:%H%M}_seed${seed}
+    dir: /media/huang/T7/real_exp/policy/${now:%m%d}_${experiment}_${now:%H%M}_seed${seed}
   sweep:
-    dir: ./results/policy/${now:%m%d}_${experiment}_${now:%H%M}_seed${seed}
+    dir: /media/huang/T7/real_exp/policy/${now:%m%d}_${experiment}_${now:%H%M}_seed${seed}
     subdir: ${hydra.job.num}
 
 wandb:
@@ -19,7 +19,7 @@ train_gpus: [0]
 
 # Training
 lr: 5e-5
-batch_size: 48
+batch_size: 16
 mix_precision: false
 num_workers: 4
 val_freq: 5
@@ -97,16 +97,16 @@ model_cfg:
     patch_size:
     - 2
     - 2
-    embed_size: 128
+    embed_size: 256
     no_patch_embed_bias: false
   language_encoder_cfg:
     network_name: MLPEncoder
     input_size: 768
-    hidden_size: 128
+    hidden_size: 256
     num_layers: 2
   extra_state_encoder_cfg:
     extra_num_layers: 0
-    extra_hidden_size: 128
+    extra_hidden_size: 256
   track_cfg:
     track_fn:
     policy_track_patch_size: 16
@@ -114,16 +114,16 @@ model_cfg:
   spatial_transformer_cfg:
     num_layers: 6
     num_heads: 8
-    head_output_size: 120
+    head_output_size: 128
     mlp_hidden_size: 512
     dropout: 0.1
     spatial_downsample: true
-    spatial_downsample_embed_size: 128
+    spatial_downsample_embed_size: 256
     use_language_token: false
   temporal_transformer_cfg:
     num_layers: 4
     num_heads: 8
-    head_output_size: 128
+    head_output_size: 256
     mlp_hidden_size: 512
     dropout: 0.1
     use_language_token: false
