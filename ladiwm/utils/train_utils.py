@@ -4,7 +4,7 @@ import random
 from omegaconf import DictConfig, OmegaConf
 
 
-def init_wandb(cfg):
+def init_wandb(cfg, mode='online'):
     cfg = OmegaConf.to_container(cfg, resolve=True)
     cfg = OmegaConf.create(cfg)
     pretty_print_cfg(cfg)
@@ -15,6 +15,7 @@ def init_wandb(cfg):
         project=cfg.wandb.project,
         name=cfg.wandb.name,
         group=cfg.wandb.group,
+        mode=mode,
     )
     OmegaConf.save(cfg, f"{wandb.run.dir}/config.yaml")
 
