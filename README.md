@@ -22,7 +22,7 @@ Therefore, we modify the source code (~/anaconda3/envs/ladiwm/lib/python3.8/site
 ```bash
 PYTHONPATH=$(pwd) python ./scripts/train_libero_diffusion_transformer_action_base.py 
 ```
-2. To train the policy model, you need to modify line-30 of the [training script](./scripts/train_libero_policy_diff_action.py) to your local data path.
+2. To train the policy model, you need to modify line-30 of the [training script](./scripts/train_libero_policy_diff_action.py) to your local data path. You should modify line-8 and line-10 of the [policy config file](./conf/train_bc/libero_vilt_dino_siglip_wm.yaml) to change the save path.
 ```bash
 PYTHONPATH=$(pwd) python ./scripts/train_libero_policy_diff_action.py -tt $Your local path for saving world model
 ```
