@@ -9,7 +9,7 @@ cd LaDiWM
 conda env create -f environment.yml
 conda activate ladiwm
 ```
-**Note**: We use the siglip model in the `transformer` package, however, the default `get_image_features` function of siglip model only return pooled tokens instead of patch tokens.
+**Note**: We use the siglip model in the `transformers` package, however, the default `get_image_features` function of siglip model only return pooled tokens instead of patch tokens.
 Therefore, we modify the source code (~/anaconda3/envs/ladiwm/lib/python3.8/site-packages/transformers/models/siglip/modeling_siglip.py), letting the `get_image_features` function to directly return `vision_outputs` instead of `pooled_output`.
 
 ### Data Preparation
