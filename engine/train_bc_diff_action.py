@@ -51,7 +51,7 @@ def main(cfg: DictConfig):
     fabric = Fabric(accelerator="cuda", devices=list(cfg.train_gpus), precision="bf16-mixed" if cfg.mix_precision else None, strategy="deepspeed")
     fabric.launch()
 
-    None if (cfg.dry or not fabric.is_global_zero) else init_wandb(cfg)
+    None if (cfg.dry or not fabric.is_global_zero) else init_wandb(cfg, mode='offline')
 
     model_cls = eval(cfg.model_name)
     model = model_cls(**cfg.model_cfg)

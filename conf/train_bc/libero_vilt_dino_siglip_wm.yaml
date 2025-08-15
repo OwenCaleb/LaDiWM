@@ -26,7 +26,7 @@ val_freq: 5
 save_freq: 10
 log_interval: 20
 clip_grad: 10.
-epochs: 21
+epochs: 51
 seed: 0
 dry: false
 
@@ -67,7 +67,7 @@ scheduler_cfg:
 
 model_name: BCViLTPolicyDiff_DINO_SIGLIP_WM5
 model_cfg:
-  load_path: /media/huang/T7/real_exp/policy/0812_libero-10_demo10_libero_vilt_dino_siglip_wm_policy_1808_seed0/model_best.ckpt
+  load_path: #/media/huang/T7/real_exp/policy/0812_libero-10_demo10_libero_vilt_dino_siglip_wm_policy_1808_seed0/model_best.ckpt
   sampling_step: 2
   dino_preweight: /media/huang/T7/ori_mount/pre_weight/dinov2_vitb14_pretrain.pth
   obs_cfg:
