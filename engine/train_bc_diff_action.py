@@ -15,7 +15,7 @@ from tqdm import tqdm
 from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
 
-from ladiwm.dataloader import get_dataloader, BCDataset2, BCDatasetAction
+from ladiwm.dataloader import get_dataloader, BCDatasetAction
 from ladiwm.policy import *
 from ladiwm.utils.train_utils import setup_optimizer, setup_lr_scheduler, init_wandb
 from ladiwm.utils.log_utils import MetricLogger, BestAvgLoss
