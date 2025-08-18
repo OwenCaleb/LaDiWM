@@ -18,7 +18,7 @@ args = parser.parse_args()
 train_gpu_ids = [0, ]
 env_gpu_ids = [0, ]
 
-root_dir = "/data1/huang/atm_libero"
+root_dir = "/home/huang/code/ATM/data/atm_libero/"
 suite_name = args.suite
 task_dir_list = os.listdir(os.path.join(root_dir, suite_name))
 task_dir_list.sort()

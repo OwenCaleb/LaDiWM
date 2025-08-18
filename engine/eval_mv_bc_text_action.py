@@ -18,11 +18,11 @@ import os
 from einops import rearrange
 from omegaconf import DictConfig
 
-from atm.policy import *
-from atm.utils.train_utils import setup_optimizer
-from atm.utils.env_utils import build_env
+from ladiwm.policy import *
+from ladiwm.utils.train_utils import setup_optimizer
+from ladiwm.utils.env_utils import build_env
 from engine.utils import rollout, merge_results
-from atm.utils.video_utils import make_grid_video_from_numpy
+from ladiwm.utils.video_utils import make_grid_video_from_numpy
 
 from engine.utils import rollout_text2, rollout_text2_loop
 

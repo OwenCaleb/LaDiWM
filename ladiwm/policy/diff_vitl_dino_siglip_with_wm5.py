@@ -1407,7 +1407,7 @@ class BCViLTPolicyDiff_DINO_SIGLIP_WM5(nn.Module):
         action = action.reshape(-1, *self.act_shape)
         action = torch.clamp(action, -1, 1)
         action_np = action.float().cpu().numpy()[:, 0]
-        return action_np, obs, action[:, 1:]
+        return action_np, obs, action
         # return action.float().cpu().numpy(), (None, pred_view)  # (b, *act_shape)
 
     def reset(self):
