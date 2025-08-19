@@ -735,10 +735,10 @@ class BCViLTPolicyDiff_DINO_SIGLIP_WM5(nn.Module):
         text_encoded_ = self.language_encoder_temporal(text_encoded_)  # (b, c')
         text_encoded_ = text_encoded_.view(B, 1, 1, action_cls_token.shape[-1])  # (b, 1, c')
         # action_cls_token = self.action_cls_token.unsqueeze(0).expand(B, T, -1, -1)  # (b, t, 1, c')
-        if self.temporal_transformer_use_text:
-            out_seq = [out, text_encoded_]
-        else:
-            out_seq = [out]
+        # if self.temporal_transformer_use_text:
+        #     out_seq = [out, text_encoded_]
+        # else:
+        #     out_seq = [out]
 
         if self.extra_encoder is not None:
             out_seq.append(extra)
@@ -855,10 +855,10 @@ class BCViLTPolicyDiff_DINO_SIGLIP_WM5(nn.Module):
         text_encoded_ = self.language_encoder_temporal(text_encoded_)  # (b, c')
         text_encoded_ = text_encoded_.view(B, 1, 1, action_cls_token.shape[-1])  # (b, 1, c')
         # action_cls_token = self.action_cls_token.unsqueeze(0).expand(B, T, -1, -1)  # (b, t, 1, c')
-        if self.temporal_transformer_use_text:
-            out_seq = [out, text_encoded_]
-        else:
-            out_seq = [out]
+        # if self.temporal_transformer_use_text:
+        #     out_seq = [out, text_encoded_]
+        # else:
+        #     out_seq = [out]
 
         if self.extra_encoder is not None:
             out_seq.append(extra)

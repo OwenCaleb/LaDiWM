@@ -788,7 +788,7 @@ def rollout_text2(env_dict, policy, num_env_rollouts, horizon=None, return_wandb
 
 @torch.no_grad()
 def rollout_text2_loop(env_dict, policy, num_env_rollouts, horizon=None, return_wandb_video=True,
-            success_vid_first=False, fail_vid_first=False, connect_points_with_line=False, loop_times=1):
+            success_vid_first=False, fail_vid_first=False, connect_points_with_line=False, loop_times=0):
     policy.eval()
     all_env_indices = []
     all_env_rewards = []
