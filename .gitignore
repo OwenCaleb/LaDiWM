@@ -1,0 +1,6 @@
+/third_party/
+/wandb/
+a.out
+MUJOCO_LOG.TXT
+steps.txt
+test.c
