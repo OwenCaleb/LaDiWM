@@ -32,6 +32,10 @@ modify line-21 of the [testing script](./scripts/eval_libero_policy_action.py) t
 PYTHONPATH=$(pwd) python ./scripts/eval_libero_policy_action.py --exp-dir $Your local path for saving policy model
 ```
 
+### Weights
+The weights contain DINO, Siglip, world model and policy model.
+BaiduDisk: https://pan.baidu.com/s/1jXTi52U_GODJp9euAr8RDA?pwd=fu2j password: fu2j
+
 ### Thanks and Contact
 Thanks to the public repos: [ADM](https://github.com/GuHuangAI/ADM-Public) and [ATM](https://github.com/Large-Trajectory-Model/ATM) for providing the base codes. 
 If you have some questions, please contact with huangai@nudt.edu.cn.
