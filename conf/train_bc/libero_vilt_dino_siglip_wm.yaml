@@ -39,6 +39,8 @@ extra_state_keys: ["joint_states", "gripper_states"]
 
 aug_prob: 0.9
 
+dataset_variant: sim  # choose between "sim" and "real" dataset implementations
+
 train_dataset:
 val_dataset:
 val_num_demos: null

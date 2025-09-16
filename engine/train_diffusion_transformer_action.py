@@ -1,19 +1,24 @@
 import os
-import sys
-sys.path.append('/home/huang/code/ATM')
+
 import hydra
 import torch, torchvision
 import wandb
 from hydra.core.hydra_config import HydraConfig
-from omegaconf import DictConfig, OmegaConf, open_dict
+from omegaconf import DictConfig, OmegaConf
 from tqdm import tqdm
 import lightning
 from lightning.fabric import Fabric
 
 from ladiwm.model import *
-from ladiwm.dataloader import ATMPretrainDataset5, get_dataloader
+from ladiwm.dataloader import ATMPretrainDataset5, ATMPretrainDataset_Real, get_dataloader
 from ladiwm.utils.log_utils import BestAvgLoss, MetricLogger
 from ladiwm.utils.train_utils import init_wandb, setup_lr_scheduler, setup_optimizer
+
+
+DATASET_REGISTRY = {
+    "sim": ATMPretrainDataset5,
+    "real": ATMPretrainDataset_Real,
+}
 
 @hydra.main(config_path="../conf/train_track_transformer", version_base="1.3")
 def main(cfg: DictConfig):
@@ -26,16 +31,21 @@ def main(cfg: DictConfig):
 
     None if (cfg.dry or not fabric.is_global_zero) else init_wandb(cfg)
 
-    train_dataset = ATMPretrainDataset5(dataset_dir=cfg.train_dataset, **cfg.dataset_cfg, aug_prob=cfg.aug_prob)
+    dataset_variant = cfg.get("dataset_variant", "sim")
+    if dataset_variant not in DATASET_REGISTRY:
+        raise ValueError(f"Unsupported dataset_variant={dataset_variant}. Available: {list(DATASET_REGISTRY)}")
+    dataset_cls = DATASET_REGISTRY[dataset_variant]
+
+    train_dataset = dataset_cls(dataset_dir=cfg.train_dataset, **cfg.dataset_cfg, aug_prob=cfg.aug_prob)
     train_loader = get_dataloader(train_dataset, mode="train", num_workers=cfg.num_workers, batch_size=cfg.batch_size)
 
-    train_vis_dataset = ATMPretrainDataset5(dataset_dir=cfg.train_dataset, vis=True, **cfg.dataset_cfg, aug_prob=cfg.aug_prob)
+    train_vis_dataset = dataset_cls(dataset_dir=cfg.train_dataset, vis=True, **cfg.dataset_cfg, aug_prob=cfg.aug_prob)
     train_vis_dataloader = get_dataloader(train_vis_dataset, mode="train", num_workers=1, batch_size=1)
 
-    val_dataset = ATMPretrainDataset5(dataset_dir=cfg.val_dataset, **cfg.dataset_cfg, aug_prob=0.)
+    val_dataset = dataset_cls(dataset_dir=cfg.val_dataset, **cfg.dataset_cfg, aug_prob=0.0)
     val_loader = get_dataloader(val_dataset, mode="val", num_workers=cfg.num_workers, batch_size=cfg.batch_size * 2)
 
-    val_vis_dataset = ATMPretrainDataset5(dataset_dir=cfg.val_dataset, vis=True, **cfg.dataset_cfg, aug_prob=0.)
+    val_vis_dataset = dataset_cls(dataset_dir=cfg.val_dataset, vis=True, **cfg.dataset_cfg, aug_prob=0.0)
     val_vis_dataloader = get_dataloader(val_vis_dataset, mode="val", num_workers=1, batch_size=1)
 
     # model_cls = eval(cfg.model_name)
