@@ -15,12 +15,22 @@ from tqdm import tqdm
 from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
 
-from ladiwm.dataloader import get_dataloader, BCDatasetAction
+from ladiwm.dataloader import (
+    BCDatasetAction,
+    BCDatasetActionReal,
+    get_dataloader,
+)
 from ladiwm.policy import *
 from ladiwm.utils.train_utils import setup_optimizer, setup_lr_scheduler, init_wandb
 from ladiwm.utils.log_utils import MetricLogger, BestAvgLoss
 from ladiwm.utils.env_utils import build_env
 from engine.utils import rollout, merge_results
+
+
+DATASET_REGISTRY = {
+    "sim": BCDatasetAction,
+    "real": BCDatasetActionReal,
+}
 
 
 @hydra.main(config_path="../conf/train_bc", version_base="1.3")
@@ -30,22 +40,27 @@ def main(cfg: DictConfig):
     setup(cfg)
     OmegaConf.save(config=cfg, f=os.path.join(work_dir, "config.yaml"))
 
-    train_dataset = BCDatasetAction(dataset_dir=cfg.train_dataset, **cfg.dataset_cfg, aug_prob=cfg.aug_prob)
+    dataset_variant = cfg.get("dataset_variant", "sim")
+    if dataset_variant not in DATASET_REGISTRY:
+        raise ValueError(f"Unsupported dataset_variant={dataset_variant}. Available: {list(DATASET_REGISTRY)}")
+    dataset_cls = DATASET_REGISTRY[dataset_variant]
+
+    train_dataset = dataset_cls(dataset_dir=cfg.train_dataset, **cfg.dataset_cfg, aug_prob=cfg.aug_prob)
     train_loader = get_dataloader(train_dataset,
                                       mode="train",
                                       num_workers=cfg.num_workers,
                                       batch_size=cfg.batch_size)
 
-    train_vis_dataset = BCDatasetAction(dataset_dir=cfg.train_dataset, vis=True, **cfg.dataset_cfg, aug_prob=cfg.aug_prob)
+    train_vis_dataset = dataset_cls(dataset_dir=cfg.train_dataset, vis=True, **cfg.dataset_cfg, aug_prob=cfg.aug_prob)
     train_vis_dataloader = get_dataloader(train_vis_dataset,
                                               mode="train",
                                               num_workers=1,
                                               batch_size=1)
 
-    val_dataset = BCDatasetAction(dataset_dir=cfg.val_dataset, num_demos=cfg.val_num_demos, **cfg.dataset_cfg, aug_prob=0.)
+    val_dataset = dataset_cls(dataset_dir=cfg.val_dataset, num_demos=cfg.val_num_demos, **cfg.dataset_cfg, aug_prob=0.)
     val_loader = get_dataloader(val_dataset, mode="val", num_workers=cfg.num_workers, batch_size=cfg.batch_size)
 
-    val_vis_dataset = BCDatasetAction(dataset_dir=cfg.val_dataset, num_demos=cfg.val_num_demos, vis=True, **cfg.dataset_cfg, aug_prob=0.)
+    val_vis_dataset = dataset_cls(dataset_dir=cfg.val_dataset, num_demos=cfg.val_num_demos, vis=True, **cfg.dataset_cfg, aug_prob=0.0)
     val_vis_dataloader = get_dataloader(val_vis_dataset, mode="train", num_workers=1, batch_size=1)
 
     fabric = Fabric(accelerator="cuda", devices=list(cfg.train_gpus), precision="bf16-mixed" if cfg.mix_precision else None, strategy="deepspeed")

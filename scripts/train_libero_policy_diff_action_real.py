@@ -40,13 +40,14 @@ val_path_list = [f"{root_dir}/{suite_name}/{task_dir}/val" for task_dir in task_
 track_fn = args.track_transformer or DEFAULT_TRACK_TRANSFORMERS[suite_name]
 
 for seed in range(1):
-    commond = (f'python -m engine.train_bc_diff_action_real --config-name={CONFIG_NAME} train_gpus="{train_gpu_ids}" '
+    commond = (f'python -m engine.train_bc_diff_action --config-name={CONFIG_NAME} train_gpus="{train_gpu_ids}" '
                 f'experiment=atm-policy_{suite_name.replace("_", "-")}_demo{NUM_DEMOS}_{exp_name} '
                 f'train_dataset="{train_path_list}" val_dataset="{val_path_list}" '
                 f'model_cfg.track_cfg.track_fn={track_fn} '
                 f'model_cfg.track_cfg.use_zero_track=False '
                 f'model_cfg.spatial_transformer_cfg.use_language_token=False '
                 f'model_cfg.temporal_transformer_cfg.use_language_token=False '
+                f'dataset_variant=real '
                 f'seed={seed} ')
 
     os.system(commond)
