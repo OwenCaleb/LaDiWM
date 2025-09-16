@@ -8,7 +8,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 # input parameters
 parser = argparse.ArgumentParser()
-parser.add_argument("--suite", default="libero_goal", choices=['libero_base', "libero_spatial", "libero_object", "libero_goal", "libero_100"],
+parser.add_argument("--suite", default="libero_goal", choices=['libero_10', "libero_spatial", "libero_object", "libero_goal", "libero_100"],
                     help="The name of the desired suite, where libero_10 is the alias of libero_long.")
 args = parser.parse_args()
 
@@ -18,7 +18,7 @@ CONFIG_NAME = "libero_diff_transformer"
 gpu_ids = [0, ]
 
 # root_dir = "./data/atm_libero/"
-root_dir = "/media/huang/T9/data/libero/atm_libero/"
+root_dir = "~/.libero/datasets/"
 suite_name = args.suite
 
 # setup number of epoches and dataset path

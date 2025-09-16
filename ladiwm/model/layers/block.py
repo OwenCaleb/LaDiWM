@@ -20,7 +20,15 @@ from .drop_path import DropPath
 from .layer_scale import LayerScale
 from .mlp import Mlp
 
+'''
+Block
+标准 Transformer 块：LayerNorm → Attention → 残差 + LayerNorm → MLP → 残差
+支持 LayerScale、DropPath、Stochastic Depth。
 
+NestedTensorBlock
+继承自 Block。
+使用 xFormers 的 BlockDiagonalMask，支持 nested tensors / 可变长度序列的高效注意力。
+'''
 logger = logging.getLogger("dinov2")
 
 

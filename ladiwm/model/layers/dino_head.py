@@ -8,6 +8,15 @@ import torch.nn as nn
 from torch.nn.init import trunc_normal_
 from torch.nn.utils import weight_norm
 
+'''
+先把高维特征压缩到一个瓶颈维度（通常 256）；
+
+再做 L2 归一化，让特征分布在单位球上；
+
+最后通过带 权重归一化 的线性层输出到目标维度（通常对应 DINO 里的 prototype 数目）。
+'''
+
+
 
 class DINOHead(nn.Module):
     def __init__(

@@ -7,6 +7,15 @@
 #   https://github.com/facebookresearch/dino/blob/master/vision_transformer.py
 #   https://github.com/rwightman/pytorch-image-models/tree/master/timm/layers/drop.py
 
+'''
+在训练时，随机按样本丢弃整个残差分支（不是丢单个神经元，而是整条路径）。
+
+这样可以让不同样本经过的网络深度不同，相当于训练出一个“深度集成”的效果。
+
+最终好处：减轻过拟合，提高模型泛化能力，特别是在深层 Transformer 或 ResNet 中。
+
+只在训练时随机“失活”残差分支，推理时不失活
+'''
 
 from torch import nn
 

@@ -11,7 +11,23 @@ from typing import Callable, Optional, Tuple, Union
 
 from torch import Tensor
 import torch.nn as nn
+'''
+作用
 
+👉 把输入图像 (B, C, H, W) 切分成固定大小的 patch，并投影到 embedding 空间，输出 (B, N, D)。
+
+B = batch size
+
+C = 输入通道数（如 RGB = 3）
+
+H, W = 图像高宽
+
+N = patch 数量 = (H/patch_H) * (W/patch_W)
+
+D = embedding 维度（transformer 的输入维度）
+
+这是 ViT 用卷积等价实现的“分块+线性投影”步骤。
+'''
 
 def make_2tuple(x):
     if isinstance(x, tuple):

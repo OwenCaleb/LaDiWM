@@ -11,6 +11,15 @@ import torch
 from torch import Tensor
 from torch import nn
 
+'''
+作用
+
+在 残差连接里的子模块输出 上，乘一个 可学习的缩放系数向量 γ (gamma)。
+
+初始值设得很小（通常 1e-5），让网络刚开始训练时几乎等于“只走恒等残差”，避免深层网络一开始就不稳定。
+
+随着训练，γ 会逐渐学到合适的放大倍数，从而让每一层的贡献逐渐增加。
+'''
 
 class LayerScale(nn.Module):
     def __init__(

@@ -52,7 +52,7 @@ dependencies:
     - boto3==1.35.8
     - botocore==1.35.8
     - cachetools==5.4.0
-    - calvin-env==0.0.1
+    - git+https://github.com/mees/calvin.git#subdirectory=calvin_en
     - catkin-pkg==1.0.0
     - certifi==2024.7.4
     - cffi==1.16.0
@@ -336,4 +336,4 @@ dependencies:
     - yapf==0.40.2
     - yarl==1.9.4
     - zipp==3.19.2
-prefix: /home/huang/anaconda3/envs/ladiwm
+prefix: /home/liwenbo/anaconda3/envs/ladiwm

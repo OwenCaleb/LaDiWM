@@ -10,6 +10,9 @@ import warnings
 from torch import Tensor, nn
 import torch.nn.functional as F
 
+'''
+实现了 SwiGLU 版 FFN，且在有 xFormers 时用其高效核，没有就用纯 PyTorch 实现。
+'''
 
 class SwiGLUFFN(nn.Module):
     def __init__(
